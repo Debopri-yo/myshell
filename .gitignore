@@ -1,0 +1,8 @@
+# Ignore editor backup files
+*~swp
+# Ignore temporary files    
+*.tmp
+# Ignore all files in bin/
+bin/*
+# Ignore all files in bin/ except for .gitkeep
+!bin/.gitkeep     
