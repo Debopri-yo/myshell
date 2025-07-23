@@ -1,6 +1,8 @@
 #include<iostream>
 #include<string>
+#include<sstream>
 #include<unistd.h>
+#include<vector>
 #include <sys/types.h>
 #include <sys/wait.h>
 using namespace std;
@@ -26,13 +28,19 @@ int main(){
 		cerr<<"fork failed"<<endl;
 	}
 	else if (pid==0){
-		cout<<"[Child] PID: "<<getpid()<<"Running | "<<input<<endl;
-		_exit(0);
+		istringstream iss(input);
+		vector<string> tokens;
+		string token;
+		while(iss >>  token) tokens.push_back(token);
+		vector<char*>args;
+		for(auto& t : tokens) args.push_back(&t[0]);
+		args.push_back(nullptr);
+		execvp(args[0],args.data());
+		cerr<<"Unknown command"<<endl;
+		_exit(1);
 	}
 	else{
-		int status;
-		wait(&status);
-		cout<<"[Parent] child finished with status"<<status<<endl;
+		wait(NULL);
 	}
 }
 return 0;
