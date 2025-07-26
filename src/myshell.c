@@ -10,7 +10,7 @@ int i=0;
 args[i]=strtok(input," \t\n");
 while(args[i]!=NULL){
 	i++;
-	args[i]=strtok(NULL," \t\t");
+	args[i]=strtok(NULL," \t\n");
 }
 }
 int main(){
@@ -31,6 +31,20 @@ int main(){
         if (strcmp(args[0], "exit") == 0) {
             break;
         }
+	
+	if (strcmp(args[0], "cd") == 0){
+		char cwd[1024];
+		getcwd(cwd, sizeof(cwd));
+		printf("current working directory %s\n",cwd);
+		printf("trying to cd into %s\n",args[1]);
+		if (args[1] == NULL){
+			fprintf(stderr,"cd: missing arguement\n");
+		}
+		else if (chdir(args[1]) == -1){
+			perror("chdir failed");
+		}
+		continue;
+	}
 
 		pid=fork();
 			if(pid < 0){
