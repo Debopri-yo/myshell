@@ -5,6 +5,7 @@
 #include<string.h>
 #define MAX_LINE 1024
 #define MAX_ARGS 64
+#define MAX_HISTORY 100
 void parse_input( char *input,char **args){
 int i=0;
 args[i]=strtok(input," \t\n");
@@ -16,13 +17,22 @@ while(args[i]!=NULL){
 int main(){
 	char input[MAX_LINE];
 	char *args[MAX_ARGS];
+	char history[MAX_HISTORY][MAX_LINE];
 	int pid;
 	int status;
+	int history_count=0;
 	while(1){
 		printf("myshell> ");
 	if(!fgets(input,MAX_LINE,stdin)){
 		break;
 	}
+	size_t len = strlen(input);
+	if(len > 0 && input[len-1=='\n']){
+		input[len-1]='\0';
+	}
+	int index=history_count % MAX_HISTORY;
+	strcpy(history[index],input);
+	history_count++;
 	parse_input(input,args);
 		if (args[0] == NULL) {
             continue;  
@@ -31,12 +41,22 @@ int main(){
         if (strcmp(args[0], "exit") == 0) {
             break;
         }
-	
+	if (strcmp(args[0], "quit") == 0) {
+            break;
+        }
+
+	if (strcmp(args[0],"history") == 0 ){
+		int start = (history_count > MAX_HISTORY) ? (history_count - MAX_HISTORY) : 0;
+		for ( int i = start;i < history_count;i++){
+		       int index = i % MAX_HISTORY;
+	       		printf("%d.%s\n",i+1,history[index]);
+		}
+	continue;
+	}		
+
+
+
 	if (strcmp(args[0], "cd") == 0){
-		char cwd[1024];
-		getcwd(cwd, sizeof(cwd));
-		printf("current working directory %s\n",cwd);
-		printf("trying to cd into %s\n",args[1]);
 		if (args[1] == NULL){
 			fprintf(stderr,"cd: missing arguement\n");
 		}
