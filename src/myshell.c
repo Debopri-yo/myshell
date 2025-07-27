@@ -21,8 +21,10 @@ int main(){
 	int pid;
 	int status;
 	int history_count=0;
+	char cwd[MAX_LINE];
 	while(1){
-		printf("myshell> ");
+		getcwd(cwd,sizeof(cwd));
+		printf("myshell:~%s:",cwd);
 	if(!fgets(input,MAX_LINE,stdin)){
 		break;
 	}
